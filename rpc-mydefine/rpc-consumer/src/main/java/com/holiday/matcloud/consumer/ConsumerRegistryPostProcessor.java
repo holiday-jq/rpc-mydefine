@@ -51,7 +51,7 @@ public class ConsumerRegistryPostProcessor implements BeanDefinitionRegistryPost
 				BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(RpcReferenceBean.class);
 				//设置bean生命周期 Init方法
 				builder.setInitMethodName(INITMETHOD);
-				builder.addPropertyValue("interfaceClassName", field.getType());
+				builder.addPropertyValue("interfaceClassType", field.getType());
 				builder.addPropertyValue("serviceVersion", annotation.serviceVersion());
 				builder.addPropertyValue("registryType", annotation.registryType());
 				builder.addPropertyValue("registryAddr", annotation.registryAddress());

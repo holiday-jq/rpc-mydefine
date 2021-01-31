@@ -9,7 +9,7 @@ import com.holiday.matcloud.registry.RegistryService;
 
 public class RpcReferenceBean implements FactoryBean<Object>{
 
-	private Class<?> interfaceClassName;
+	private Class<?> interfaceClassType;
 	
 	private String serviceVersion;
 	
@@ -30,23 +30,23 @@ public class RpcReferenceBean implements FactoryBean<Object>{
 	public void init() throws Exception {
 		RegistryService registryService = RegistryFactory.getInstance(this.registryAddr, this.registryType);
 	    this.object = Proxy.newProxyInstance(
-	    		interfaceClassName.getClassLoader(), 
-	    		new Class[] {interfaceClassName},
+	    		interfaceClassType.getClassLoader(), 
+	    		new Class[] {interfaceClassType},
 	    		new RpcInvokerProxy(serviceVersion, timeout, registryService));
 	}
 
 	@Override
 	public Class<?> getObjectType() {
 		// TODO Auto-generated method stub
-		return interfaceClassName;
+		return interfaceClassType;
 	}
 	
-	public Class<?> getInterfaceClassName() {
-		return interfaceClassName;
+	public Class<?> getinterfaceClassType() {
+		return interfaceClassType;
 	}
 
-	public void setInterfaceClassName(Class<?> interfaceClassName) {
-		this.interfaceClassName = interfaceClassName;
+	public void setinterfaceClassType(Class<?> interfaceClassType) {
+		this.interfaceClassType = interfaceClassType;
 	}
 
 	public String getServiceVersion() {
