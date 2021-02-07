@@ -16,4 +16,11 @@
 自定义rpc协议                                                                                                                                                                              
 4:intertface接口模块：仅定义接口和方法，具体实现在provider模块                                                                                                            
 5：core核心模块：定义一些共具类和公用实体类                                                                                                                                      
-6：consumer消费者和动态代理模块：定义一个调用服务的自定义注解，此注解是作用于字段，项目启动时通过spring的BeanDefinitionRegistryPostProcessor后置处理器，判断Bean的字段是否有自定义的注解，如果有就往IOC容器里面加入beanDefintion，并且该beanDefintion是一个FactoryBean，在该bean生命周期的时候为其创建一个代理类，这样IOC容器就会多了这个bean，并且是一个增强后的代理类。代理类的内容无非是屏蔽远程调用的细节，让调用远程服务就像调用本地服务一样。
+6：consumer消费者和动态代理模块：定义一个调用服务的自定义注解，此注解是作用于字段，项目启动时通过spring的BeanDefinitionRegistryPostProcessor后置处理器，判断Bean的字段是否有自定义的注解，如果有就往IOC容器里面加入beanDefintion，并且该beanDefintion是一个FactoryBean，在该bean生命周期的时候为其创建一个代理类，这样IOC容器就会多了这个bean，并且是一个增强后的代理类。代理类的内容无非是屏蔽远程调用的细节，让调用远程服务就像调用本地服务一样。 
+
+     对比Dubbo：                                                                                                                                                               
+                                                                                                                                                                             
+1：dubbo的SPI机制提供了极大的扩展性。例如按需加载、AOP（包装类）、IOC功能，如protocol的调用，通过ExtensionLoader.getExtensionLoader(protocol.class).getAdaptiveExtension()获取一个代理类，可以通过URL的参数，根据参数决定调用那个实现类。                                                                                                                                                   
+2：从provider服务提供端来看，dubbo提供端启动流程：在ioc容器刷新完成时广播容器刷新完成方法，然后默认先在本地暴露服务，用得是jvm协议，服务端有可能自己掉用本地的服务，这样可以避免网络传输开销，   然后通过代理工厂生成invoker，再通过Protocol代理类进行暴露服务，通过Netty绑定端口，然后再将服务暴露到注册中心（如zookpeer），最后将服务暴露信息，记录在记录表的一个hashMap中。                                 
+3：从服务端启动来看，dubbo启动流程：读取配置信息，根据配置信息从注册中心订阅服务，然后获取到provider地址、端口、接口信息后，开启NettyClient连接服务端，然后创建invoker,通过invoker为服务接⼝⽣成代理对象,ReferenceBean是个工厂FactoryBean,可以在getObject这个方法在创建bean的时候提供扩展。 这个代理对象⽤于远程调⽤provider.                                                                                    
+4：当然还有很多，例如dubbo的集群容错机制、监控中心、过滤器、负载均衡算法 
